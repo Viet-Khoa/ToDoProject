@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  nginx:
+    container_name: nginxToDoProject
+    build:
+      context: .
+      dockerfile: dockerfiles/nginx.dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./public/:/var/www/html
+    depends_on:
+      - mariadb
+  mariadb:
+    container_name: mariadbToDoProject
+    image: mariadb:11.1
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: heart
+      MYSQL_USER: khoa
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - ./mysql:/var/lib/mysql
+  php:
+    container_name: phpToDoProject
+    build:
+      context: .
+      dockerfile: dockerfiles/php.dockerfile
+    volumes:
+      - ./public/:/var/www/html/
